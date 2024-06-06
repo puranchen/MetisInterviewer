@@ -97,7 +97,6 @@ class MultipleChoice(QuestionABC):
         self.mc_type = mc_type
         self._answered = False
         if answered:
-            print("Completing form")
             self.complete()
         self.set_choices(choices, lang)
         
@@ -138,6 +137,9 @@ class MultipleChoice(QuestionABC):
 
     def complete(self):
         self._answered = True
+        if all(choice.answer == None for choice in self.choices):
+            self.set_answer(0)
+            return
         for choice in self.choices:
             if choice.answer is None:
                 choice.set_answer(False)
