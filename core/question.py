@@ -2,11 +2,12 @@ from abc import ABC, abstractmethod
 
 class QuestionABC(ABC):
     """ Base class for all questions. """
-    def __init__(self, prompt:str, answer=None, lang:str='en'):
+    def __init__(self, prompt:str, answer=None, lang:str='en', skippable=False):
         self._prompt = {lang: prompt}
         self._answer = None
         if answer is not None:
             self.set_answer(answer)
+        self.skippable = skippable
 
     @property
     def prompt(self):
@@ -23,6 +24,8 @@ class QuestionABC(ABC):
     @abstractmethod
     def set_answer(self, value=None):
         pass
+    
+
 
 class QuestionBool(QuestionABC):
     """ Question with a boolean answer. """
@@ -34,6 +37,13 @@ class QuestionBool(QuestionABC):
     
     def set_prompt(self, value):
         self._prompt.update(value)
+
+    def ask(self, lang='sv'):
+        print(self.prompt.get(lang))
+        print("1 - Ja\n2 - Nej")
+        answer = int(input("Svar: "))
+        if answer in [1, 2]:
+            self.set_answer(answer == 1)
 
     def __repr__(self):
         return f"QuestionBool(prompt={self.prompt!r}, answer={self._answer!r})"
@@ -49,6 +59,12 @@ class QuestionInt(QuestionABC):
     def set_prompt(self, value):
         self._prompt.update(value)
 
+    def ask(self, lang='sv'):
+        print(self.prompt.get(lang))
+        answer = input("Svar: ")
+        if answer.isdigit():
+            self.set_answer(int(answer))
+
     def __repr__(self):
         return f"QuestionInt(prompt={self.prompt!r}, answer={self._answer!r})"
     
@@ -63,6 +79,12 @@ class QuestionFloat(QuestionABC):
     def set_prompt(self, value):
         self._prompt.update(value)
 
+    def ask(self, lang='sv'):
+        print(self.prompt.get(lang))
+        answer = input("Svar: ")
+        if answer.replace(".", "").replace(",","").isdigit():
+            self.set_answer(float(answer.replace(",",".")))
+
     def __repr__(self):
         return f"QuestionFloat(prompt={self.prompt!r}, answer={self._answer!r})"
     
@@ -74,6 +96,11 @@ class QuestionStr(QuestionABC):
     
     def set_prompt(self, value):
         self._prompt.update(value)
+
+    def ask(self, lang='sv'):
+        print("\n", self.prompt.get(lang))
+        answer = input("Svar: ")
+        self.set_answer(answer)
 
     def __repr__(self):
         return f"QuestionStr(prompt={self.prompt!r}, answer={self._answer!r})"
@@ -99,6 +126,7 @@ class MultipleChoice(QuestionABC):
         if answered:
             self.complete()
         self.set_choices(choices, lang)
+        self._answer = []
         
     @property
     def choices(self):
@@ -116,24 +144,52 @@ class MultipleChoice(QuestionABC):
             raise ValueError("Choices must be a list of strings or QuestionBool objects.")
 
     def set_answer(self, value=None):
-        if isinstance(value, int):
+        if isinstance(value, int) or (isinstance(value, str) and value.isdigit()):
+            value = int(value)
             if value == 0:
                 for choice in self._choices:
                     choice.set_answer(False)
                     if choice.idx == 0:
                         choice.set_answer(True)
-            else:
+                        self._answer.append(choice)
+            else: # if answer is not 'None of the above'
                 for choice in self._choices:
                     if choice.idx == value:
                         choice.set_answer(True)
-                    elif choice.idx == 0:
-                        choice.set_answer(False)
+                        self._answer.append(choice)
+                    elif choice.idx == 0 and value is not None: 
+                        choice.set_answer(False) # The 'None of the above' option must be set to False
                     else:
                         if self.mc_type == 'single-select':
                             choice.set_answer(False)
 
     def set_prompt(self, value):
         self._prompt.update(value)
+
+    @property
+    def answer(self):
+        if len(self._answer) == 0:
+            return None
+        elif len(self._answer) == 1:
+            return self._answer[0]
+        else:
+            return self._answer
+    
+    def reset_answers(self):
+        for choice in self.choices:
+            choice.set_answer(None)
+        self._answer = []
+
+    def ask(self, lang='sv'):
+        if self.mc_type == 'single-select':
+            self.reset_answers()
+        print("\n", self.prompt.get(lang))
+        for choice in self.choices:
+            print(f"{choice.idx} - {choice.prompt.get(lang)}")
+        answer = input("Svar: ").split(",")
+        for a in answer:
+            if a.isdigit():
+                self.set_answer(int(a))
 
     def complete(self):
         self._answered = True
