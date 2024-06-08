@@ -3,64 +3,74 @@ from enum import Enum
 
 # Questions
 qHaveFever = MultipleChoice(prompt='Har du feber?', choices=['Ja', 'Nej', 'Vet ej/kanske'], lang='sv', none_option=False)
-qBodyTemperature = QuestionFloat(prompt='Vad är din kroppstemperatur?', lang='sv', skippable=True)
+qBodyTemperature = QuestionFloat(prompt='Vad är din kroppstemperatur?', lang='sv', skippable=True, unit="ºC", min_value=20, max_value=55)
 qCanMeasureTemp = QuestionBool(prompt='Har du möjlighet att mäta temperaturen?', lang='sv')
 qFeelingWarm = QuestionBool(prompt='Känner du dig varm?', lang='sv')
 qKnownImmunoDeficiency = QuestionBool(prompt='Har du någon känd immunbristsjukdom?', lang='sv')
 
 class Fever(Enum):
-    UNKNOWN = 0
-    CONFIRMED = 1
-    RULED_OUT = 2
-    N_A = 3
-    INCONCLUSIVE = 4
+    UNKNOWN = -1
+    RULED_OUT = 0
+    N_A = 1
+    INCONCLUSIVE = 2
+    CONFIRMED = 3
 
-def feverAssessment(lang='sv'):
+def assessFever(lang='sv'):
     
     # Root node: First question in the Fever assessment flowchart
     qHaveFever.ask(lang=lang)
 
-    if qHaveFever.answer.idx == 1: # Yes
-        qBodyTemperature.ask(lang=lang)
+    # Yes, have fever
+    if qHaveFever.answer[0].idx == 1: 
+        qBodyTemperature.ask(lang)
         if qBodyTemperature.answer is not None and qBodyTemperature.answer >= 38:
             return Fever.CONFIRMED
-        else:
-            qKnownImmunoDeficiency.ask(lang=lang)
+        elif qBodyTemperature.answer is not None and qBodyTemperature.answer in range(0, 38):
+            qKnownImmunoDeficiency.ask(lang)
             if qKnownImmunoDeficiency.answer:
                 return Fever.N_A
             else:
                 return Fever.RULED_OUT
-            
-    elif qHaveFever.answer is not None and qHaveFever.answer.idx == 2: # No
-        qKnownImmunoDeficiency.ask(lang=lang)
-        if qKnownImmunoDeficiency.answer: # Known immunodeficiency
+        else:
+            qBodyTemperature.set_answer(None)
+
+    # No, don't have fever
+    elif qHaveFever.answer[0].idx == 2: 
+        qKnownImmunoDeficiency.ask(lang)
+        if qKnownImmunoDeficiency.answer:
             return Fever.N_A
         else:
             return Fever.RULED_OUT
         
-    elif qHaveFever.answer.idx == 3: # Don't know/Maybe
-        qCanMeasureTemp.ask(lang=lang)
-        if qCanMeasureTemp.answer: # Can measure temperature
-            qBodyTemperature.ask(lang=lang)
+    # Don't know/Maybe fever
+    elif qHaveFever.answer[0].idx == 3: 
+        qCanMeasureTemp.ask(lang)
+        if qCanMeasureTemp.answer:
+            qBodyTemperature.ask(lang)
             if qBodyTemperature.answer >= 38:
                 return Fever.CONFIRMED
-            else:
-                qKnownImmunoDeficiency.ask(lang=lang)
+            elif qBodyTemperature.answer in range(0, 38):
+                qKnownImmunoDeficiency.ask(lang)
                 if qKnownImmunoDeficiency.answer:
                     return Fever.N_A
                 else:
                     return Fever.RULED_OUT
-        else: # Can't measure temperature
-            qFeelingWarm.ask(lang=lang)
-            if qFeelingWarm.answer: 
-                qKnownImmunoDeficiency.ask(lang=lang)
+            else:
+                qBodyTemperature.set_answer(None)
+        elif qCanMeasureTemp.answer == False:
+            qFeelingWarm.ask(lang)
+            if qFeelingWarm.answer:
+                qKnownImmunoDeficiency.ask(lang)
                 if qKnownImmunoDeficiency.answer:
                     return Fever.N_A
                 else:
                     return Fever.INCONCLUSIVE
             else:
-                qKnownImmunoDeficiency.ask(lang=lang)
+                qKnownImmunoDeficiency.ask(lang)
                 if qKnownImmunoDeficiency.answer:
                     return Fever.N_A
                 else:
                     return Fever.RULED_OUT
+    else:
+        raise ValueError('Something went wrong...')
+    
