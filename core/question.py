@@ -6,6 +6,8 @@ input_prompt = {
     "en": "Answer: "
 }
 
+SUPPORTED_LANGUAGES = ["sv", "en"]
+
 class QuestionABC(ABC):
     """ Base class for all questions. """
     def __init__(self, prompt:str, answer=None, lang:str='en', skippable=False, asked=False):
@@ -18,20 +20,25 @@ class QuestionABC(ABC):
 
     @property
     def prompt(self):
+        """ Get the prompt for the question. """
         return self._prompt
 
     @property
     def answer(self):
+        """ Get the answer to the question. """
         return self._answer
     
     def set_prompt(self, prompt, lang):
-        """ Used for setting prompts in other languages """
+        """Sets the prompt in the specified language."""
+        if lang not in SUPPORTED_LANGUAGES:
+            raise ValueError(f"Unsupported language: {lang}")
         self._prompt.update({lang: prompt})
     
     @abstractmethod
     def set_answer(self, value):
+        """ Set the answer to the question. """
         pass
-
+    
 class QuestionBool(QuestionABC):
     """ Question with a boolean answer. """
     def set_answer(self, value: Union[bool, int,]):
@@ -156,6 +163,7 @@ class QuestionFloat(QuestionABC):
                 self._print_invalid_message(answer)
 
     def _is_valid_user_input(self, answer):
+        """ Helper function to check if user input is a valid integer. """
         try:
             value = float(answer)
         except ValueError:
@@ -189,6 +197,7 @@ class QuestionStr(QuestionABC):
             self._answer = str(value)
     
     def ask(self, lang='sv'):
+        """ Used for debugging and testing """
         print("\n", self.prompt.get(lang), sep="")
         answer = input(input_prompt[lang])
         self.set_answer(answer)
@@ -220,6 +229,7 @@ class MultipleChoice(QuestionABC):
         
     @property
     def choices(self):
+        """ Get the choices for the question. """
         return self._choices
     
     def set_choices(self, choices:list, lang:str='en', none_prompt="None of the above"):
@@ -234,6 +244,7 @@ class MultipleChoice(QuestionABC):
             raise ValueError("Choices must be a list of strings or QuestionBool objects.")
 
     def set_answer(self, value:int):
+        """ Set the answer to the question. """
         assert type(value) == int
 
         if value == 0:
@@ -261,11 +272,13 @@ class MultipleChoice(QuestionABC):
         self._answer = []
 
     def print_question(self, lang):
+        """ Print the question to the console. """
         print("\n", self.prompt.get(lang), sep="")
         for choice in self.choices:
             print(f"{choice.idx} - {choice.prompt.get(lang)}")
 
     def ask(self, lang='sv'):
+        """ Used for debugging and testing """
         while True:
             self.reset_answers() # Rest answers when asking question
             self.print_question(lang)
@@ -297,6 +310,7 @@ class MultipleChoice(QuestionABC):
                 continue
 
     def complete(self):
+        """ Assign unassigned questions among multiple choices """
         if all(choice.answer == None for choice in self.choices):
             self.set_answer(0)
             return
