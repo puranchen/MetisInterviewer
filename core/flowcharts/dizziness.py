@@ -72,7 +72,7 @@ benignDizzinessSymptoms = MultipleChoice(
     prompt='Stämmer något av följande in på dig',
     choices=[
         'Yrseln har endast kommit vid enstaka tillfällen',
-        'Yrsel endast i samband med snabb uppresning',
+        'Yrseln kommer endast i samband med snabb uppresning',
         'Yrseln uppstod efter en gungig sjöfärd',
     ],
     lang='sv',
@@ -91,93 +91,62 @@ lastEpisodeThisWeek = QuestionBool(
     prompt='Har du besvärats av yrsel under den senaste veckan?',
     lang='sv')
 
+def odf_subtree(lang):
+    oDF.ask(lang)
+    if any(a.idx in [0] for a in oDF.answer):
+        bDS.ask(lang)
+        if any(a.idx in [0] for a in bDS.answer):
+            return f"RGS Vardag närmaste dygnet"
+        else:
+            return f"RGS Avvakta"
+    else:
+        return f"RGS Vardag närmaste dygnet"
+
+def qSevereDizziness_subtree(lang):
+    qSevereDizziness.ask(lang)
+    if any(a.idx == 0 for a in qSevereDizziness.answer):
+        aConstitutionalSymptoms = assessConstitutionalSymptoms(lang)
+        if aConstitutionalSymptoms.value <= 1:
+            pSD.ask(lang)
+            if any(a.idx in [1,2] for a in pSD.answer):
+                return f"RGS Omgående: Symptom från bröstet"
+            elif any(a.idx in [3] for a in pSD.answer):
+                return f"RGS Omgående: Öronbesvär och yrsel",
+            elif any(a.idx in [4] for a in pSD.answer) and suddenDizziness.answer == True:
+                return f"RGS Omgående: Plötslig yrsel och huvudvärk",
+            else:
+                pMSD.ask(lang)
+                if any(a.idx in [0] for a in pMSD.answer):
+                    certainMovementTriggers.ask(lang)
+                    if certainMovementTriggers.answer == True:
+                        return f"RGS Närmaste dygnet: Lägesberoende yrsel"
+                    else:
+                        return odf_subtree(lang)
+                else:
+                    pMSD_notOngoing.ask(lang)
+                    if pMSD_notOngoing.answer == True:
+                        return f"RGS Omgående: Bortfallssymptom, balansproblem eller förvirring"
+                    else:
+                        return f"RGS Skyndsamt: Bortfallssymptom, balansproblem eller förvirring som gått över"
+        else:
+            return f"RGS Omgående: Yrsel och allmänpåverkan"
+    else:
+        return f"RGS Omgående: Kraftig yrsel"
+    
 def assessDizziness(lang='sv'):
     
-    ongoingDizziness.ask()
+    ongoingDizziness.ask(lang)
     if ongoingDizziness.answer == True:
-        suddenDizziness.ask()
-        qSevereDizziness.ask()
-        if any(a.idx == 0 for a in qSevereDizziness.answer):
-            aConstitutionalSymptoms = assessConstitutionalSymptoms(lang)
-            if aConstitutionalSymptoms.value <= 1:
-                pSD.ask()
-                if any(a.idx in [1,2] for a in pSD.answer):
-                    return f"RGS OMGÅENDE: Symptom från bröstet"
-                elif any(a.idx in [3] for a in pSD.answer):
-                    return f"RGS OMGÅENDE: Öronbesvär och yrsel",
-                elif any(a.idx in [4] for a in pSD.answer) and suddenDizziness.answer == True:
-                    return f"RGS OMGÅENDE: Plötslig yrsel och huvudvärk",
-                else:
-                    pMSD.ask()
-                    if any(a.idx in [0] for a in pMSD.answer):
-                        certainMovementTriggers.ask()
-                        if certainMovementTriggers.answer == True:
-                            return f"RGS Närmaste dygnet: Lägesberoende yrsel"
-                        else:
-                            oDF.ask()
-                            if any(a.idx in [0] for a in oDF.answer):
-                                bDS.ask()
-                                if any(a.idx in [0] for a in bDS.answer):
-                                    return f"RGS Vardag närmaste dygnet"
-                                else:
-                                    return f"RGS Avvakta"
-                    else:
-                        pMSD_notOngoing.ask()
-                        if pMSD_notOngoing.answer == True:
-                            return f"RGS OMGÅENDE: Bortfallssymptom, balansproblem eller förvirring"
-                        else:
-                            return f"RGS Skyndsamt: Bortfallssymptom, balansproblem eller förvirring som gått över"
-            else:
-                return f"RGS OMGÅENDE: Yrsel och allmänpåverkan"
-        else:
-            return f"RGS OMGÅENDE: Kraftig yrsel"
+        suddenDizziness.ask(lang)
+        return qSevereDizziness_subtree(lang)
+    
     else:
-        lastEpisodeThisWeek.ask()
+        lastEpisodeThisWeek.ask(lang)
         if lastEpisodeThisWeek.answer == True:
-            qSevereDizziness.ask()
-            if any(a.idx == 0 for a in qSevereDizziness.answer):
-                aConstitutionalSymptoms = assessConstitutionalSymptoms(lang)
-                if aConstitutionalSymptoms.value <= 1:
-                    pSD.ask()
-                    if any(a.idx in [1,2] for a in pSD.answer):
-                        return f"RGS OMGÅENDE: Symptom från bröstet"
-                    elif any(a.idx in [3] for a in pSD.answer):
-                        return f"RGS OMGÅENDE: Öronbesvär och yrsel",
-                    elif any(a.idx in [4] for a in pSD.answer) and suddenDizziness.answer == True:
-                        return f"RGS OMGÅENDE: Plötslig yrsel och huvudvärk",
-                    else:
-                        pMSD.ask()
-                        if any(a.idx in [0] for a in pMSD.answer):
-                            certainMovementTriggers.ask()
-                            if certainMovementTriggers.answer == True:
-                                return f"RGS Närmaste dygnet: Lägesberoende yrsel"
-                            else:
-                                oDF.ask()
-                                if any(a.idx in [0] for a in oDF.answer):
-                                    bDS.ask()
-                                    if any(a.idx in [0] for a in bDS.answer):
-                                        return f"RGS Vardag närmaste dygnet"
-                                    else:
-                                        return f"RGS Avvakta"
-                        else:
-                            pMSD_notOngoing.ask()
-                            if pMSD_notOngoing.answer == True:
-                                return f"RGS OMGÅENDE: Bortfallssymptom, balansproblem eller förvirring"
-                            else:
-                                return f"RGS Skyndsamt: Bortfallssymptom, balansproblem eller förvirring som gått över"
-                else:
-                    return f"RGS OMGÅENDE: Yrsel och allmänpåverkan"
-            else:
-                return f"RGS OMGÅENDE: Kraftig yrsel"
+            return qSevereDizziness_subtree(lang)
         elif lastEpisodeThisWeek.answer == False:
-            certainMovementTriggers.ask()
+            certainMovementTriggers.ask(lang)
             if certainMovementTriggers.answer == True:
                 return f"RGS Närmaste dygnet: Lägesberoende yrsel"
             else:
-                oDF.ask()
-                if any(a.idx in [0] for a in oDF.answer):
-                    bDS.ask()
-                    if any(a.idx in [0] for a in bDS.answer):
-                        return f"RGS Vardag närmaste dygnet"
-                    else:
-                        return f"RGS Avvakta"
+                return odf_subtree(lang)
