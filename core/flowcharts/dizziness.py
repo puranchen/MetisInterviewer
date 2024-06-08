@@ -20,7 +20,7 @@ qSevereDizziness = MultipleChoice(
         'Kan ej dricka pga yrsel'
     ], 
     none_prompt='Inget av ovanstående', none_option=True, 
-    mc_type='multi-select', lang='sv')
+    variant='multi-select', lang='sv')
 
 potentiallySeriousDizzinessSymptoms = MultipleChoice(
     prompt='Upplever du eller har du upplevt något av följande symptom tillsammans med yrseln?',
@@ -32,7 +32,7 @@ potentiallySeriousDizzinessSymptoms = MultipleChoice(
     ],
     none_prompt='Inget av ovanstående',
     lang='sv',
-    mc_type = 'multi-select')
+    variant = 'multi-select')
 
 pSD = potentiallySeriousDizzinessSymptoms
 
@@ -47,7 +47,7 @@ potentiallyModeratelySeriouesDizzinessSymptoms = MultipleChoice(
     ],
     none_prompt='Inget av ovanstående',
     lang='sv',
-    mc_type='multi-select')
+    variant='multi-select')
 
 pMSD = potentiallyModeratelySeriouesDizzinessSymptoms
 
@@ -64,7 +64,7 @@ otherDizzinessFeatures = MultipleChoice(
     ],
     none_prompt='Inget av ovanstående',
     lang='sv',
-    mc_type='multi-select')
+    variant='multi-select')
 
 oDF = otherDizzinessFeatures
 
@@ -77,7 +77,7 @@ benignDizzinessSymptoms = MultipleChoice(
     ],
     lang='sv',
     none_prompt='Inget av ovanstående',
-    mc_type='multi-select')
+    variant='multi-select')
 
 bDS = benignDizzinessSymptoms
 

@@ -23,7 +23,7 @@ def assessConstitutionalSymptoms(lang='sv'):
             'Frossa (kraftiga, okontrollerade skakningar med samtidig frysningskänsla)',
         ],
         none_prompt='Inget av ovanstående',
-        mc_type='multi-select',
+        variant='multi-select',
         lang='sv'
     )
 
