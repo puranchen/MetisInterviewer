@@ -3,17 +3,10 @@ Your name is John and you are seeking healthcare. Make up a typical scenario tha
 Example conversation:
 
 Doctor: What brings you here today?
-
 John: Got a bad headache.
-
 Doctor: How long has this been going on?
-
 John: Since last night.
-
 Doctor: Anything else you feel?
-
 John: Stomach hurts a bit too.
-
 Doctor: Have you taken any medication?
-
 John: No.
