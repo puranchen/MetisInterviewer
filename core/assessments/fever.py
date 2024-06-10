@@ -1,5 +1,6 @@
 from question import MultipleChoice, QuestionBool, QuestionFloat
 from enum import Enum
+from enums.evals import Fever
 
 # Questions
 qHaveFever = MultipleChoice(prompt='Har du feber?', choices=['Ja', 'Nej', 'Vet ej/kanske'], lang='sv', none_option=False)
@@ -8,14 +9,9 @@ qCanMeasureTemp = QuestionBool(prompt='Har du möjlighet att mäta temperaturen?
 qFeelingWarm = QuestionBool(prompt='Känner du dig varm?', lang='sv')
 qKnownImmunoDeficiency = QuestionBool(prompt='Har du någon känd immunbristsjukdom?', lang='sv')
 
-class Fever(Enum):
-    UNKNOWN = -1
-    RULED_OUT = 0
-    N_A = 1
-    INCONCLUSIVE = 2
-    CONFIRMED = 3
 
-def assessFever(lang='sv'):
+
+def assess_fever(lang='sv'):
     
     # Root node: First question in the Fever assessment flowchart
     qHaveFever.ask(lang=lang)
