@@ -1,10 +1,10 @@
 # Instantiate a multiple choice question
-from question import MultipleChoice, QuestionBool, QuestionFloat
+from core.question import MultipleChoice, QuestionBool, QuestionFloat
 
 # Import common assessment forms
-from assessments.fever import assessFever
-from assessments.constitutionalSymptoms import assessConstitutionalSymptoms
-from assessments.pain import assessPain
+from core.assessments.fever import assess_fever
+from core.assessments.constitutionalSymptoms import assessConstitutionalSymptoms
+from core.assessments.pain import assessPain
 
 
 # Questions
@@ -22,7 +22,8 @@ qSevereDizziness = MultipleChoice(
     none_prompt='Inget av ovanstående', none_option=True, 
     variant='multi-select', lang='sv')
 
-potentiallySeriousDizzinessSymptoms = MultipleChoice(
+# potentiallySeriousDizzinessSymptoms (pSD)
+pSD = MultipleChoice(
     prompt='Upplever du eller har du upplevt något av följande symptom tillsammans med yrseln?',
     choices=[
         'Bröstsmärta',
@@ -34,9 +35,8 @@ potentiallySeriousDizzinessSymptoms = MultipleChoice(
     lang='sv',
     variant = 'multi-select')
 
-pSD = potentiallySeriousDizzinessSymptoms
-
-potentiallyModeratelySeriouesDizzinessSymptoms = MultipleChoice(
+# potentiallyModeratelySeriousDizzinessSymptoms (pMSD)
+pMSD = MultipleChoice(
     prompt='Vilka av följande symptom har du besvärats av under perioden du har haft yrsel?',
     choices=[
         'Kraftlöshet',
@@ -49,13 +49,12 @@ potentiallyModeratelySeriouesDizzinessSymptoms = MultipleChoice(
     lang='sv',
     variant='multi-select')
 
-pMSD = potentiallyModeratelySeriouesDizzinessSymptoms
-
 certainMovementTriggers = QuestionBool(
     prompt='Kommer yrseln endast vid vissa rörelser?',
     lang='sv')
 
-otherDizzinessFeatures = MultipleChoice(
+# otherDizzinessFeatures (oDF)
+oDF = MultipleChoice(
     prompt='Stämmer något av följande in på dig?',
     choices=[
         'Yrseln har kommit och gått under flera dagar',
@@ -66,9 +65,8 @@ otherDizzinessFeatures = MultipleChoice(
     lang='sv',
     variant='multi-select')
 
-oDF = otherDizzinessFeatures
-
-benignDizzinessSymptoms = MultipleChoice(
+# benignDizzinessSymptoms (bDS)
+bDS = MultipleChoice(
     prompt='Stämmer något av följande in på dig',
     choices=[
         'Yrseln har endast kommit vid enstaka tillfällen',
@@ -79,18 +77,16 @@ benignDizzinessSymptoms = MultipleChoice(
     none_prompt='Inget av ovanstående',
     variant='multi-select')
 
-bDS = benignDizzinessSymptoms
-
-potentiallyModeratelySeriouesDizzinessSymptomsNotOngoing = QuestionBool(
+# potentiallyModeratelySeriouesDizzinessSymptomsNotOngoing (pMSD_notOngoing)
+pMSD_notOngoing = QuestionBool(
     prompt='Har alla symptom gått över?',
     lang='sv')
-
-pMSD_notOngoing = potentiallyModeratelySeriouesDizzinessSymptomsNotOngoing
 
 lastEpisodeThisWeek = QuestionBool(
     prompt='Har du besvärats av yrsel under den senaste veckan?',
     lang='sv')
 
+### Subtrees
 def odf_subtree(lang):
     oDF.ask(lang)
     if any(a.idx in [0] for a in oDF.answer):
@@ -133,6 +129,7 @@ def qSevereDizziness_subtree(lang):
     else:
         return f"RGS Omgående: Kraftig yrsel"
     
+# Main function    
 def assessDizziness(lang='sv'):
     
     ongoingDizziness.ask(lang)
@@ -150,3 +147,10 @@ def assessDizziness(lang='sv'):
                 return f"RGS Närmaste dygnet: Lägesberoende yrsel"
             else:
                 return odf_subtree(lang)
+
+# Entry point            
+def main():
+    assessDizziness('sv')
+
+if __name__ == '__main__':
+    main()
