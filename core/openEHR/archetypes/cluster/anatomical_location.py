@@ -38,49 +38,38 @@ If this archetype is used within other archetypes where the specified subject of
 ### Misuse
 Not to be used for specifiying unilateral/bilateral occurrences of an anatomical feature.
 
-
 """
 
-from enums.Laterality import Laterality
+from enums import Laterality, Aspect, AnatomicalLine
+from utils import enum_property
 
 class AnatomicalLocation:
-    def __init__(
-            self, 
-            body_site_name, 
-            specific_site=None, 
-            laterality: Laterality=None, 
-            aspect=None, 
-            anatomical_line=None, 
-            description=None, 
-            alternative_structure=None, 
-            multimedia_representation=None     
-    ):
-        self.body_site_name = body_site_name
-        self.specific_site = specific_site
-        self.laterality = laterality
-        self.aspect = aspect
-        self.anatomical_line = anatomical_line
-        self.description = description
-        self.alternative_structure = alternative_structure
-        self.multimedia_representation = multimedia_representation
+    def __init__(self, name:str, **kwargs):
+        self.name = name
+        self.specific_site = kwargs.get('specific_site', None)
+        self.laterality = kwargs.get('laterality', None)
+        self.aspect = kwargs.get('aspect', None)
+        self.anatomical_line = kwargs.get('anatomical_line', None)
+        self.description = kwargs.get('description', None)
+        self.alternative_structure = kwargs.get('alternative_structure', None)
+        self.multimedia_representation = kwargs.get('multimedia_representation', None)
 
     @property
-    def laterality(self):
-        return self._laterality
+    def name(self):
+        return self._name
     
-    @laterality.setter
-    def laterality(self, value):
-        if value is not None:
-            if isinstance(value, Laterality):
-                self._laterality = value
-            elif isinstance(value, str) and value.upper() in Laterality.__members__:
-                self._laterality = Laterality[value.upper()]
-            else:
-                raise ValueError(f"Invalid value for laterality: {value!r}. Must be one of {Laterality.__members__}")
+    @name.setter
+    def name(self, value):
+        if isinstance(value, str):
+            self._name = value.lower()
         else:
-            self._laterality = None
+            raise ValueError(f"Invalid type for name: {value!r}")
+        
+    laterality = enum_property(Laterality)
+    aspect = enum_property(Aspect)
+    anatomical_line = enum_property(AnatomicalLine)
 
     def __repr__(self):
-        return f"AnatomicalLocation(body_site_name={self.body_site_name!r}, laterality={self.laterality!r})"
+        return f"AnatomicalLocation({self.__dict__!r})"
 
 __all__ = ['AnatomicalLocation']
