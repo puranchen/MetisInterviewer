@@ -1,10 +1,10 @@
 # Instantiate a multiple choice question
-from core.question import MultipleChoice, QuestionBool, QuestionFloat
+from core.question.question import MultipleChoice, QuestionBool, QuestionFloat
 
 # Import common assessment forms
-from core.assessments.fever import assess_fever
-from core.assessments.constitutionalSymptoms import assessConstitutionalSymptoms
-from core.assessments.pain import assessPain
+from core.assessment.fever import assess_fever
+from core.assessment.constitutionalSymptoms import assessConstitutionalSymptoms
+from core.assessment.pain import assessPain
 
 
 # Questions

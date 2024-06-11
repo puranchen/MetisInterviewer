@@ -1,5 +1,5 @@
 from enum import Enum
-from core.question import MultipleChoice, QuestionBool
+from core.question.question import MultipleChoice, QuestionBool
 
 # Outcomes
 class ConstitutionalSymptoms(Enum):

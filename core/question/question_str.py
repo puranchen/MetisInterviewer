@@ -1,0 +1,18 @@
+from . import QuestionABC
+
+class QuestionStr(QuestionABC):
+    """ Question with a string answer. """
+    def set_answer(self, value=None):
+        if value is not None:
+            self._answer = str(value)
+    
+    def ask(self, lang='sv'):
+        """ Used for debugging and testing """
+        print("\n", self.prompt.get(lang), sep="")
+        answer = input(self.INPUT_PROMPT[lang])
+        self.set_answer(answer)
+        self.asked = True
+
+    def __repr__(self):
+        return f"QuestionStr(prompt={self.prompt!r}, answer={self._answer!r})"
+    

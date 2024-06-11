@@ -11,6 +11,6 @@ from .openehr.active_inactive import ActiveInactive
 from .openehr.level_of_control import LevelOfControl
 from .openehr.resolution_phase import ResolutionPhase
 from .openehr.diagnostic_certainty import DiagnosticCertainty
-from .si_unit import SIUnit
+from .utils.si_unit import SIUnit
 
 __all__ = ['Laterality', 'SeverityCategory', 'SIUnit', 'Episodicity', 'Occurrence', 'Progression', 'Aspect', 'AnatomicalLine', 'DiagnosticStatus', 'CurrentPast', 'ActiveInactive', 'LevelOfControl', 'ResolutionPhase', 'DiagnosticCertainty']

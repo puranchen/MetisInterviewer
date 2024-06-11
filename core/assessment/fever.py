@@ -1,5 +1,5 @@
 from enum import Enum
-from core.question import MultipleChoice, QuestionBool, QuestionFloat
+from core.question.question import MultipleChoice, QuestionBool, QuestionFloat
 from core.enums.evals import Fever
 
 # Questions
