@@ -1,5 +1,5 @@
-from . import QuestionABC
-from mc_option import MCOption
+from .question_abc import QuestionABC
+from .mc_option import MCOption
 
 class MultipleChoice(QuestionABC):
     """ Question with multiple choice answers. """

@@ -3,8 +3,6 @@ from typing import Dict
 
 SUPPORTED_LANGUAGES = ["sv", "en"]
 
-
-
 class QuestionABC(ABC):
     """Base class for all questions."""
     
@@ -13,11 +11,10 @@ class QuestionABC(ABC):
         "en": "Answer: "
     }
 
-    def __init__(self, prompt:str, answer=None, lang:str='en', skippable=False, asked=False):
+    def __init__(self, prompt:str, answer=None, lang:str='en', skippable=False):
         self._prompt = {lang: prompt}
-        self._answer = None
         self.skippable = skippable
-        self.asked = asked
+        self.asked = False
         if answer is not None:
             self.set_answer(answer)
     
@@ -31,8 +28,8 @@ class QuestionABC(ABC):
         """ Get the answer to the question. """
         return self._answer
     
-    def set_prompt(self, prompt, lang):
-        """Sets the prompt in the specified language."""
+    def set_prompt(self, prompt, lang) -> None:
+        """Sets prompt in the specified language. Mainly used for multi-lingual support."""
         if lang not in SUPPORTED_LANGUAGES:
             raise ValueError(f"Unsupported language: {lang}")
         self._prompt.update({lang: prompt})

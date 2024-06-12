@@ -1,4 +1,4 @@
-from . import QuestionABC
+from .question_abc import QuestionABC
 
 class QuestionInt(QuestionABC):
     """ Question with an integer answer. """
@@ -9,14 +9,14 @@ class QuestionInt(QuestionABC):
         self.max_value = max_value
         self.min_value = min_value
 
-    def set_answer(self, value):
+    def set_answer(self, value) -> None:
         """ Set the answer to the question. """
         if not isinstance(value, (int, type(None))):
             raise ValueError(f"Answer must be an integer or NoneType, got {type(value)}:")
         self._answer = value
         
-    def ask(self, lang='sv'):
-        """ used for debugging and testing """
+    def ask(self, lang='sv') -> None:
+        """ Ask the question to the user, default language is Swedish. Used for debugging and testing. """
         while True:
             # Print to console and get user input
             print("\n", self.prompt.get(lang), sep="")
@@ -30,7 +30,7 @@ class QuestionInt(QuestionABC):
             else:
                 self._print_invalid_message(answer)
 
-    def _is_valid_user_input(self, answer):
+    def _is_valid_user_input(self, answer: str) -> bool:
         """ Helper function to check if user input is a valid integer. """
         try:
             value = int(answer)
@@ -44,7 +44,7 @@ class QuestionInt(QuestionABC):
         
         return True
     
-    def _print_invalid_message(self, answer):
+    def _print_invalid_message(self, answer) -> None:
         """ Helper function to print an error message when user input is invalid. """
         if self.min_value is not None and self.max_value is not None:
             print(f"Invalid answer: {answer!r}. Must be a number between {self.min_value!r} and {self.max_value!r}. Please try again.")
@@ -57,3 +57,5 @@ class QuestionInt(QuestionABC):
 
     def __repr__(self):
         return f"QuestionInt(prompt={self.prompt!r}, answer={self._answer!r})"
+    
+__all__ = ["QuestionInt"]

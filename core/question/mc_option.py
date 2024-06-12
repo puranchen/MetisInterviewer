@@ -1,4 +1,4 @@
-from question_bool import QuestionBool
+from .question_bool import QuestionBool
 
 class MCOption(QuestionBool):
     """ Wrapper around QuestionBool for multiple choice options. """
