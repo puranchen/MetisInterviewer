@@ -1,5 +1,5 @@
 # Instantiate a multiple choice question
-from core.question.question import MultipleChoice, QuestionBool, QuestionFloat
+from core.question import MultipleChoice, QuestionBool, QuestionFloat
 
 # Import common assessment forms
 from core.assessment.fever import assess_fever
