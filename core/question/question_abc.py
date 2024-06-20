@@ -11,12 +11,12 @@ class QuestionABC(ABC):
         "en": "Answer: "
     }
 
-    def __init__(self, prompt:str, answer=None, lang:str='en', skippable=False):
-        self._prompt = {lang: prompt}
-        self.skippable = skippable
+    def __init__(self, prompt, **kwargs):
+        self._prompt = {kwargs.get("lang", 'en'): prompt}
+        self.skippable = kwargs.get("skippable", False)
         self.asked = False
-        if answer is not None:
-            self.set_answer(answer)
+        if kwargs.get("answer", None) is not None:
+            self.set_answer(kwargs.get("answer"))
     
     @property
     def prompt(self):

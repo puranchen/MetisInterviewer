@@ -4,12 +4,12 @@ from abc import abstractmethod
 class QuestionNumerical(QuestionABC):
     """ Question with a numerical answer. """
 
-    def __init__(self, prompt, value_type, unit=None, lang:str = 'en', min_value=None, max_value=None, skippable=False):
-        super().__init__(prompt, lang=lang, skippable=skippable)
-        self.unit = unit
-        self.value_type = value_type
-        self.max_value = max_value
-        self.min_value = min_value
+    def __init__(self, prompt, **kwargs):
+        super().__init__(prompt, **kwargs)
+        self.unit = kwargs.get("unit", None)
+        self.value_type = kwargs.get("value_type")
+        self.max_value = kwargs.get("max_value", None)
+        self.min_value = kwargs.get("min_value", None)
 
     @property
     def max_value(self):
@@ -56,9 +56,9 @@ class QuestionNumerical(QuestionABC):
         self._answer = value
 
 
-    def ask(self, lang='sv') -> None:
+    def ask(self, lang='en') -> None:
         while True:
-            print("\n", self.prompt.get(lang), sep="")
+            print("\n", self._prompt.get(lang), sep="")
             response = input(f"{self.INPUT_PROMPT[lang]} ({self.unit}) ").replace(",",".")
             if self._is_valid_user_input(response):
                 self.set_answer(self.value_type(response))

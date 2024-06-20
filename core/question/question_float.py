@@ -6,8 +6,8 @@ class QuestionFloat(QuestionNumerical):
 
     def __init__(self, prompt, unit=None, lang:str = 'en', min_value:float=None, max_value:float=None, skippable=False):
         super().__init__(prompt, value_type=float, unit=unit, lang=lang, skippable=skippable)
-        self.unit = unit
-        self.max_value = max_value
-        self.min_value = min_value
+    
+    def __repr__(self):
+        return f"QuestionFloat(prompt={self.prompt!r}, answer={self._answer!r})"
     
 __all__ = ["QuestionFloat"]
