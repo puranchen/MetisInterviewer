@@ -17,11 +17,14 @@ class QuestionNumerical(QuestionABC):
     
     @max_value.setter
     def max_value(self, value):
+        # max_value must be in integer if value_type is int
+        if isinstance(value, float) and self.value_type == int:
+            raise ValueError(f"max_value must be an integer if value_type is int, got {type(value)}")
+
         if value is not None:
             if self.value_type == float: #always typecast to float if value_type is float
                 self._max_value = float(value)
-            elif isinstance(value, float) and self.value_type == int:
-                raise ValueError(f"max_value must be an integer if value_type is int, got {type(value)}")
+            
             else:
                 self._max_value = self.value_type(value)
         else:   
