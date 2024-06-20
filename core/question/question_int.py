@@ -1,4 +1,3 @@
-from .question_abc import QuestionABC
 from .question_numerical import QuestionNumerical
 
 class QuestionInt(QuestionNumerical):

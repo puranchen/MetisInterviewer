@@ -55,7 +55,6 @@ class QuestionNumerical(QuestionABC):
             raise ValueError(f"Answer must be less than {self.max_value}")
         self._answer = value
 
-
     def ask(self, lang='en') -> None:
         while True:
             print("\n", self._prompt.get(lang), sep="")
