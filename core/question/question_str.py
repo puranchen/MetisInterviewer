@@ -6,7 +6,7 @@ class QuestionStr(QuestionABC):
         if value is not None:
             self._answer = str(value)
     
-    def ask(self, lang='sv'):
+    def ask(self, lang='en'):
         """ Ask the question to the user, default language is Swedish. Used for debugging and testing. """
         print("\n", self.prompt.get(lang), sep="")
         answer = input(self.INPUT_PROMPT[lang])

@@ -2,8 +2,8 @@ from .question_bool import QuestionBool
 
 class MCOption(QuestionBool):
     """ Wrapper around QuestionBool for multiple choice options. """
-    def __init__(self, idx, prompt:str, answer=None, lang:str='en'):
-        super().__init__(prompt, answer, lang)
+    def __init__(self, idx, prompt:str, **kwargs):
+        super().__init__(prompt, **kwargs)
         self.idx = idx
     
     def __repr__(self):

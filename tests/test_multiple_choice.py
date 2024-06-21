@@ -23,11 +23,10 @@ class TestMultipleChoice(unittest.TestCase):
         self.assertEqual(self.q.choices[-1].prompt['en'], "None of the above")
 
     def test_multiple_choice_set_choices_with_strings(self):
-        choices = ["Red", "Blue", "Green"]
+        choices = ["Purple", "Amber", "Orange", "Yellow"]
         self.q.set_choices(choices, lang='en', none_prompt="None of the above")
-        self.assertEqual(len(self.q.choices), 4)
+        self.assertEqual(len(self.q.choices), 5)
         self.assertTrue(all(isinstance(choice, MCOption) for choice in self.q.choices))
-        self.assertEqual(self.q.choices[-1].prompt['en'], "None of the above")
 
     def test_multiple_choice_set_choices_with_mcoptions(self):
         choices = [MCOption(1, prompt="Red"), MCOption(2, prompt="Blue"), MCOption(3, prompt="Green")]

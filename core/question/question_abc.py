@@ -17,6 +17,7 @@ class QuestionABC(ABC):
         self.asked = False
         if kwargs.get("answer", None) is not None:
             self.set_answer(kwargs.get("answer"))
+        self._answer = None
     
     @property
     def prompt(self):
@@ -31,7 +32,7 @@ class QuestionABC(ABC):
     def set_prompt(self, prompt, lang) -> None:
         """Sets prompt in the specified language. Mainly used for multi-lingual support."""
         if lang not in SUPPORTED_LANGUAGES:
-            raise ValueError(f"Unsupported language: {lang}")
+            raise ValueError(f"Unsupported language: {lang}. Supported languages are: {SUPPORTED_LANGUAGES}")
         self._prompt.update({lang: prompt})
     
     @abstractmethod

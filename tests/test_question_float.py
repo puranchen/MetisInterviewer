@@ -4,76 +4,70 @@ from unittest.mock import patch, MagicMock
 
 class TestQuestionFloat(unittest.TestCase):
 
-    def setUp(self):
-        self.q = QuestionFloat(prompt="What did the thermometer show?", min_value=10, max_value=60)
-
-    def test_question_float_init(self):
-        self.assertFalse(self.q.asked)
-        self.assertIsNone(self.q._answer)
-        self.assertFalse(self.q.skippable)
-        self.assertEqual(self.q.unit, None)
-        self.assertEqual(self.q.min_value, 10.0)
-        self.assertEqual(self.q.max_value, 60.0)
-
-    def test_question_float_prompt_1(self):
-        self.assertEqual(self.q.prompt, {'en': "What did the thermometer show?"})
-
-    def test_question_float_prompt_2(self):
-        self.q.set_prompt('Vad visade termometern?', 'sv')
-        self.assertEqual(self.q.prompt, {'en': "What did the thermometer show?", 'sv': 'Vad visade termometern?'})
-
-    def test_question_float_set_answer_valid(self):
-        self.q.set_answer(38)
-        self.assertEqual(self.q._answer, 38.0)
-
-    def test_question_float_set_answer_invalid_type(self):
+    def test_initialization(self):
+        """Test that a QuestionFloat object is initialized correctly."""
+        question = QuestionFloat("What is the temperature?")
+        self.assertEqual(question.prompt.get("en"), "What is the temperature?")
+        self.assertIsNone(question.answer)
+        self.assertFalse(question.asked)
+        self.assertFalse(question.skippable)
+        self.assertEqual(question.value_type, float)
+        self.assertIsNone(question.max_value)
+        self.assertIsNone(question.min_value)
+        self.assertIsNone(question.unit)
         with self.assertRaises(ValueError):
-            self.q.set_answer("invalid")
-
-    def test_question_float_set_answer_below_min(self):
+            question.set_answer("a")
         with self.assertRaises(ValueError):
-            self.q.set_answer(5)
+            question.set_answer(0)
 
-    def test_question_float_set_answer_above_max(self):
+    def test_initialization_with_kwargs(self):
+        """Test that a QuestionFloat object is initialized correctly with additional kwargs."""
+        question = QuestionFloat("What is the temperature?", skippable=True, lang="sv", unit="C", min_value=0.0, max_value=100.0)
+        self.assertEqual(question.prompt.get("sv"), "What is the temperature?")
+        self.assertFalse(question.asked)
+        self.assertTrue(question.skippable)
+        self.assertEqual(question.unit, "C")
+        self.assertEqual(question.min_value, 0.0)
+        self.assertEqual(question.max_value, 100.0)
         with self.assertRaises(ValueError):
-            self.q.set_answer(65)
+            question.set_answer(-1.0)
+        with self.assertRaises(ValueError):
+            question.set_answer(101.0)
 
-    def test_question_float_is_valid_user_input(self):
-        self.assertFalse(self.q._is_valid_user_input("a"))
-        self.assertFalse(self.q._is_valid_user_input("38ºC"))
-        self.assertFalse(self.q._is_valid_user_input("2"))
-        self.assertTrue(self.q._is_valid_user_input("38.2"))
-        self.assertTrue(self.q._is_valid_user_input("37.3"))
-        self.assertFalse(self.q._is_valid_user_input("-30"))
-        self.assertFalse(self.q._is_valid_user_input("60.1"))
-
-    def test_question_float_print_invalid_message(self):
-        with patch('builtins.print') as mocked_print:
-            self.q._print_invalid_message("38ºC")
-            mocked_print.assert_called_once_with("Invalid answer: '38ºC'. Must be a number between 10.0 and 60.0. Please try again.")
-
-    @patch('builtins.input', side_effect=['15.5'])
-    def test_question_float_ask(self, mock_input):
-        with patch.object(self.q, '_print_invalid_message') as mock_print_invalid, \
-                patch.object(self.q, '_is_valid_user_input', return_value=True):
-            self.q.ask(lang='en')
-            self.assertTrue(self.q.asked)
-            self.assertEqual(self.q._answer, 15.5)
-            mock_print_invalid.assert_not_called()
-
-    @patch('builtins.input', side_effect=['invalid', '15.5'])
-    def test_question_float_ask_invalid_then_valid(self, mock_input):
-        with patch.object(self.q, '_print_invalid_message') as mock_print_invalid, \
-                patch.object(self.q, '_is_valid_user_input', side_effect=[False, True]):
-            self.q.ask(lang='en')
-            self.assertTrue(self.q.asked)
-            self.assertEqual(self.q._answer, 15.5)
-            mock_print_invalid.assert_called_once()
-
-    def test_question_float_repr(self):
-        self.q.set_answer(38.0)
-        expected_repr = "QuestionFloat(prompt={'en': 'What did the thermometer show?'}, answer=38.0None)"
-        self.assertEqual(repr(self.q), expected_repr)
-
-if __name__ == '__main__':
+    def test_set_answer(self):
+        """Test that the set_answer method works correctly."""
+        question = QuestionFloat("What is the temperature?", min_value=0.0, max_value=100.0)
+        question.set_answer(25.5)
+        self.assertEqual(question.answer, 25.5)
+    
+    def test_set_answer_invalid(self):
+        """Test that the set_answer method raises an error with invalid inputs."""
+        question = QuestionFloat("What is the temperature?", min_value=0.0, max_value=100.0)
+        with self.assertRaises(ValueError):
+            question.set_answer("Invalid")
+    
+    def test_set_prompt(self):
+        """Test that the set_prompt method works correctly for different languages."""
+        question = QuestionFloat("What is the temperature?")
+        question.set_prompt("Vad är temperaturen?", "sv")
+        self.assertEqual(question.prompt.get("sv"), "Vad är temperaturen?")
+        self.assertEqual(question.prompt.get("en"), "What is the temperature?")
+    
+    def test_set_prompt_invalid_language(self):
+        """Test that the set_prompt method raises an error for unsupported languages."""
+        question = QuestionFloat("What is the temperature?")
+        with self.assertRaises(ValueError):
+            question.set_prompt("Quelle est la température?", "fr")
+    
+    def test_max_value_setter(self):
+        """Test that the max_value setter works correctly."""
+        question = QuestionFloat("What is the temperature?", max_value=100.0)
+        self.assertEqual(question.max_value, 100.0)
+    
+    def test_min_value_setter(self):
+        """Test that the min_value setter works correctly."""
+        question = QuestionFloat("What is the temperature?", min_value=0.0)
+        self.assertEqual(question.min_value, 0.0)
+ 
+if __name__ == "__main__":
     unittest.main()

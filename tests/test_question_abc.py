@@ -2,36 +2,56 @@ import unittest
 from question.question_abc import QuestionABC
 from typing import Dict
 
-# Concrete subclass for testing
-class TestQuestion(QuestionABC):
+class DummyQuestion(QuestionABC):
+    """Dummy implementation of QuestionABC for testing purposes."""
+    
+    def __init__(self, prompt, **kwargs):
+        super().__init__(prompt, **kwargs)
+        self._answer = None  # Initialize _answer attribute
+    
     def set_answer(self, value):
         self._answer = value
 
 class TestQuestionABC(unittest.TestCase):
 
-    def setUp(self):
-        self.q = TestQuestion(prompt="What is the capital of France?", lang='en')
-
-    def test_question_abc_init(self):
-        self.assertEqual(self.q.prompt, {'en': "What is the capital of France?"})
-        self.assertFalse(self.q.asked)
-        self.assertFalse(self.q.skippable)
-        self.assertIsNone(self.q.answer)
-
-    def test_question_abc_set_prompt_valid(self):
-        self.q.set_prompt('Vad är huvudstaden i Frankrike?', 'sv')
-        self.assertEqual(self.q.prompt, {'en': "What is the capital of France?", 'sv': 'Vad är huvudstaden i Frankrike?'})
-
-    def test_question_abc_set_prompt_invalid_language(self):
+    def test_initialization(self):
+        """Test that a QuestionABC object is initialized correctly."""
+        question = DummyQuestion("Is this a test?")
+        self.assertEqual(question.prompt.get("en"), "Is this a test?")
+        self.assertIsNone(question.answer)
+        self.assertFalse(question.asked)
+        self.assertFalse(question.skippable)
+    
+    def test_initialization_with_kwargs(self):
+        """Test that a QuestionABC object is initialized correctly with additional kwargs."""
+        question = DummyQuestion("Is this a test?", skippable=True, lang="sv", answer="Yes")
+        self.assertEqual(question.prompt.get("sv"), "Is this a test?")
+        self.assertFalse(question.asked)
+        self.assertTrue(question.skippable)
+    
+    def test_set_prompt(self):
+        """Test that the set_prompt method works correctly for different languages."""
+        question = DummyQuestion("Is this a test?")
+        question.set_prompt("Är detta ett test?", "sv")
+        self.assertEqual(question.prompt.get("sv"), "Är detta ett test?")
+        self.assertEqual(question.prompt.get("en"), "Is this a test?")
+    
+    def test_set_prompt_invalid_language(self):
+        """Test that the set_prompt method raises an error for unsupported languages."""
+        question = DummyQuestion("Is this a test?")
         with self.assertRaises(ValueError):
-            self.q.set_prompt('What is the capital of France?', 'de')
+            question.set_prompt("C'est un test?", "fr")
+    
+    def test_set_answer(self):
+        """Test that the set_answer method in the subclass works correctly."""
+        question = DummyQuestion("Is this a test?")
+        question.set_answer("Yes")
+        self.assertEqual(question.answer, "Yes")
+    
+    def test_input_prompt(self):
+        """Test that the input prompt dictionary is correct."""
+        self.assertEqual(DummyQuestion.INPUT_PROMPT["sv"], "Svar: ")
+        self.assertEqual(DummyQuestion.INPUT_PROMPT["en"], "Answer: ")
 
-    def test_question_abc_set_answer(self):
-        self.q.set_answer('Paris')
-        self.assertEqual(self.q.answer, 'Paris')
-
-    def test_question_abc_input_prompt(self):
-        self.assertEqual(self.q.INPUT_PROMPT, {"sv": "Svar: ", "en": "Answer: "})
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

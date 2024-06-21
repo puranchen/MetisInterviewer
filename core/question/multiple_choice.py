@@ -3,14 +3,16 @@ from .mc_option import MCOption
 
 class MultipleChoice(QuestionABC):
     """ Question with multiple choice answers. """
-    def __init__(self, prompt:str, choices:list, answer:list=None, lang:str='en', none_option=True, none_prompt="None of the above", variant='single-select', answered=False):
-        super().__init__(prompt, answer, lang)
+    def __init__(self, prompt:str, choices:list, **kwargs):
+        super().__init__(prompt, **kwargs)
         self._choices = []
-        self.none_option = none_option
-        self.variant = variant
-        if answered:
+        self.none_option = kwargs.get("none_option", False)
+        self.none_prompt = kwargs.get("none_prompt", "None of the above")
+        self.variant = kwargs.get("variant", 'single-select')
+        self.answered = kwargs.get("answered", False)
+        if self.answered:
             self.complete()
-        self.set_choices(choices, lang, none_prompt)
+        self.set_choices(choices, kwargs.get('lang', 'en'), self.none_prompt)
         self._answer: list = []
         
     @property
@@ -19,18 +21,20 @@ class MultipleChoice(QuestionABC):
         return self._choices
     
     def set_choices(self, choices:list, lang:str='en', none_prompt="None of the above"):
+        """ Set the choices for the question. """
+        # If the list of choices are strings, create MCOption objects from them
         if all(isinstance(choice, str) for choice in choices):
             self._choices = [MCOption(idx+1, prompt=prompt, answer=None, lang=lang) for idx, prompt in enumerate(choices)]
             if self.none_option:
                 self._choices.append(MCOption(0, prompt=none_prompt, lang=lang))
-
+        # If the list of choices are MCOption objects, use them directly
         elif all(isinstance(choice, MCOption) for choice in choices):
             self._choices = choices
         else:
-            raise ValueError("Choices must be a list of strings or QuestionBool objects.")
+            raise ValueError("Choices must be a list of strings or MCOption objects.")
 
     def set_answer(self, value:int):
-        """ Set the answer to the question. """
+        """ Set the answer to the question using idx. """
         assert type(value) == int
 
         if value == 0:
@@ -66,7 +70,7 @@ class MultipleChoice(QuestionABC):
     def ask(self, lang='sv'):
         """ Used for debugging and testing """
         while True:
-            self.reset_answers() # Rest answers when asking question
+            self.reset_answers() # Reset answers when asking question
             self.print_question(lang)
             answer = input(self.INPUT_PROMPT[lang])
 

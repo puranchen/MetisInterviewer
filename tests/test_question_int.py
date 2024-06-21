@@ -44,7 +44,7 @@ class TestQuestionInt(unittest.TestCase):
     def test_question_int_print_invalid_message(self):
         with patch('builtins.print') as mocked_print:
             self.q._print_invalid_message("5.5")
-            mocked_print.assert_called_once_with("Invalid answer: '5.5'. Must be a number between 1.0 and 10.0. Please try again.")
+            mocked_print.assert_called_once_with("Invalid answer: '5.5'. Must be a number between 1 and 10. Please try again.")
 
     @patch('builtins.input', side_effect=['7'])
     def test_question_int_ask(self, mock_input):

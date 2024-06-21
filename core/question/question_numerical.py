@@ -49,17 +49,24 @@ class QuestionNumerical(QuestionABC):
     def set_answer(self, value) -> None:
         if not isinstance(value, (self.value_type, type(None))):
             raise ValueError(f"Answer must be a {self.value_type} or NoneType, got {type(value)}:")
-        if self._min_value and value < self._min_value:
-            raise ValueError(f"Answer must be greater than {self.min_value}")
-        if self._max_value and value > self._max_value:
-            raise ValueError(f"Answer must be less than {self.max_value}")
+        if isinstance(value, self.value_type):
+            if self._min_value is not None and self._min_value > value:
+                raise ValueError(f"Answer must be greater than {self.min_value}")
+            if self._max_value is not None and value > self._max_value:
+                raise ValueError(f"Answer must be less than {self.max_value}")
         self._answer = value
 
     def ask(self, lang='en') -> None:
         while True:
             print("\n", self._prompt.get(lang), sep="")
+            if self.skippable:
+                print({'en': 'Enter `-` to skip', 'sv': 'Svara `-` för att hoppa över'}[lang])
             response = input(f"{self.INPUT_PROMPT[lang]} ({self.unit}) ").replace(",",".")
             if self._is_valid_user_input(response):
+                if response == "-":
+                    self.asked = True
+                    self.set_answer(None)
+                    break
                 self.set_answer(self.value_type(response))
                 self.asked = True
                 break
@@ -67,6 +74,8 @@ class QuestionNumerical(QuestionABC):
                 self._print_invalid_message(response)
 
     def _is_valid_user_input(self, response) -> bool:
+        if self.skippable and response == "-":
+            return True
         try:
             value = self.value_type(response)
         except ValueError:
