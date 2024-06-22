@@ -12,7 +12,12 @@ class QuestionABC(ABC):
     }
 
     def __init__(self, prompt, **kwargs):
-        self._prompt = {kwargs.get("lang", 'en'): prompt}
+        if isinstance(prompt, str):
+            self._prompt = {kwargs.get("lang", 'en'): prompt}
+        elif isinstance(prompt, dict): 
+            key_list = list(prompt)
+            assert all(v in SUPPORTED_LANGUAGES for v in key_list), f"Supported languages are: {SUPPORTED_LANGUAGES}"
+            self._prompt = prompt
         self.skippable = kwargs.get("skippable", False)
         self.asked = False
         if kwargs.get("answer", None) is not None:
