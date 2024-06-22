@@ -16,7 +16,7 @@ class QuestionABC(ABC):
             self._prompt = {kwargs.get("lang", 'en'): prompt}
         elif isinstance(prompt, dict): 
             key_list = list(prompt)
-            assert all(v in SUPPORTED_LANGUAGES for v in key_list), f"Supported languages are: {SUPPORTED_LANGUAGES}"
+            assert all(lang in SUPPORTED_LANGUAGES for lang in key_list), f"Supported languages are: {SUPPORTED_LANGUAGES}"
             self._prompt = prompt
         self.skippable = kwargs.get("skippable", False)
         self.asked = False
