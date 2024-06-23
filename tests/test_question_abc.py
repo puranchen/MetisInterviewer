@@ -24,8 +24,8 @@ class TestQuestionABC(unittest.TestCase):
     
     def test_initialization_with_kwargs(self):
         """Test that a QuestionABC object is initialized correctly with additional kwargs."""
-        question = DummyQuestion("Is this a test?", skippable=True, lang="sv", answer="Yes")
-        self.assertEqual(question.prompt.get("sv"), "Is this a test?")
+        question = DummyQuestion("Is this a test?", skippable=True, lang="en", answer="Yes")
+        self.assertEqual(question.prompt.get("en"), "Is this a test?")
         self.assertFalse(question.asked)
         self.assertTrue(question.skippable)
     

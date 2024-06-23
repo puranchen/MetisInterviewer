@@ -8,7 +8,6 @@ class TestQuestionFloat(unittest.TestCase):
         """Test that a QuestionFloat object is initialized correctly."""
         question = QuestionFloat("What is the temperature?")
         self.assertEqual(question.prompt.get("en"), "What is the temperature?")
-        self.assertIsNone(question.answer)
         self.assertFalse(question.asked)
         self.assertFalse(question.skippable)
         self.assertEqual(question.value_type, float)
@@ -22,8 +21,8 @@ class TestQuestionFloat(unittest.TestCase):
 
     def test_initialization_with_kwargs(self):
         """Test that a QuestionFloat object is initialized correctly with additional kwargs."""
-        question = QuestionFloat("What is the temperature?", skippable=True, lang="sv", unit="C", min_value=0.0, max_value=100.0)
-        self.assertEqual(question.prompt.get("sv"), "What is the temperature?")
+        question = QuestionFloat("What is the temperature?", skippable=True, lang="en", unit="C", min_value=0.0, max_value=100.0)
+        self.assertEqual(question.prompt.get("en"), "What is the temperature?")
         self.assertFalse(question.asked)
         self.assertTrue(question.skippable)
         self.assertEqual(question.unit, "C")

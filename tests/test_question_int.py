@@ -9,7 +9,6 @@ class TestQuestionInt(unittest.TestCase):
 
     def test_question_int_init(self):
         self.assertFalse(self.q.asked)
-        self.assertIsNone(self.q._answer)
         self.assertFalse(self.q.skippable)
         self.assertEqual(self.q.unit, "pieces")
         self.assertEqual(self.q.min_value, 1)

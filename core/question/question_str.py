@@ -14,6 +14,6 @@ class QuestionStr(QuestionABC):
         self.asked = True
 
     def __repr__(self):
-        return f"QuestionStr(prompt={self.prompt!r}, answer={self._answer!r})"
+        return f"QuestionStr(prompt={self._prompt!r}, answer={self._answer!r})"
     
 __all__ = ["QuestionStr"]

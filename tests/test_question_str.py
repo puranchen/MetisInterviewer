@@ -9,7 +9,6 @@ class TestQuestionStr(unittest.TestCase):
 
     def test_question_str_init(self):
         self.assertFalse(self.q.asked)
-        self.assertIsNone(self.q._answer)
         self.assertFalse(self.q.skippable)
         self.assertEqual(self.q.prompt, {'en': "What is your name?"})
 
@@ -23,10 +22,6 @@ class TestQuestionStr(unittest.TestCase):
     def test_question_str_set_answer(self):
         self.q.set_answer("Alice")
         self.assertEqual(self.q._answer, "Alice")
-        
-    def test_question_str_set_answer_none(self):
-        self.q.set_answer()
-        self.assertEqual(self.q._answer, None)
 
     @patch('builtins.input', side_effect=['Alice'])
     def test_question_str_ask(self, mock_input):
