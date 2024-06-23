@@ -61,7 +61,8 @@ class QuestionNumerical(QuestionABC):
             print("\n", self._prompt.get(lang), sep="")
             if self.skippable:
                 print({'en': 'Enter `-` to skip', 'sv': 'Svara `-` för att hoppa över'}[lang])
-            response = input(f"{self.INPUT_PROMPT[lang]} ({self.unit}) ").replace(",",".")
+            unit = f" ({self.unit}) " if self.unit else ""
+            response = input(f"{self.INPUT_PROMPT[lang]}{unit}").replace(",",".")
             if self._is_valid_user_input(response):
                 if response == "-":
                     self.asked = True
