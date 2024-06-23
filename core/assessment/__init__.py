@@ -1,3 +1,3 @@
-from .fever import assess_fever
-from .constitutionalSymptoms import assessConstitutionalSymptoms
-from .pain import assessPain
+from .feverLogic import evalFever
+from .constitutionalSymptomsLogic import evalConstitutionalSymptoms
+from .painLogic import evalPain
