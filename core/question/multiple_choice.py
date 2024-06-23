@@ -1,6 +1,6 @@
 from .question_abc import QuestionABC
 from .mc_option import MCOption
-
+from typing import List
 class MultipleChoice(QuestionABC):
     """ Question with multiple choice answers. """
     def __init__(self, prompt:str, choices:list, **kwargs):
@@ -13,7 +13,7 @@ class MultipleChoice(QuestionABC):
         if self.answered:
             self.complete()
         self.set_choices(choices, kwargs.get('lang', 'en'), self.none_prompt)
-        self._answer: list = []
+        self._answer: List[int] = []
         
     @property
     def choices(self):
