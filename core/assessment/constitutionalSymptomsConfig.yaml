@@ -1,0 +1,22 @@
+- type: question
+  class_: MultipleChoice
+  variant: multi-select
+  name: constitutionalSymptoms
+  prompt: { sv: "Vilka av följande symptom stämmer in på dig?" }
+  choices:
+  - { sv: 'Blek, kråaktig eller blåvit hud' }
+  - { sv: 'Kallsvettig' }
+  - { sv: 'Orolig och rastlös' }
+  - { sv: 'Andfådd eller andas snabbt och ytligt' }
+  - { sv: 'Slö, dåsig och kraftlös' }
+  - { sv: 'Frossa (kraftiga, okontrollerade skakningar med samtidig frysningskänsla)' }
+  none_option: true
+  none_prompt: { sv: "Inget av ovanstående" }
+
+- type: question
+  class_: QuestionBool
+  name: notSelfSustaining
+  prompt: { sv: 'Upplever du svårigheter att ta hand om dig själv?' }
+
+  
+  
