@@ -1,4 +1,4 @@
-from core.question.question import QuestionInt
+from question.question_int import QuestionInt
 from enum import Enum
 
 class Pain(Enum):
