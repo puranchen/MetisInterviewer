@@ -1,0 +1,177 @@
+- type: question
+  class_: QuestionBool
+  name: ongoingDizziness
+  prompt: { sv: "Har du yrsel just nu?" }
+
+- type: question
+  class_: QuestionBool
+  name: suddenDizziness
+  prompt: { sv: "Kom yrseln plötsligt?" }
+
+- type: question
+  class_: MultipleChoice
+  name: severeDizziness
+  prompt: { sv: "Ibland kan yrsel vara så kraftig att man inte klarar av några vardagliga sysslor.\nVad av följande stämmer in på dig?" }
+  variant: multi-select
+  choices:
+  - { sv: 'Svårt att gå utan att hålla sig i väggarna pga yrsel' }
+  - { sv: 'Kan ej äta pga yrsel' }
+  - { sv: 'Kan ej dricka pga yrsel' }
+  none_option: true
+  none_prompt: { sv: "Inget av ovanstående" }
+
+- type: question
+  class_: MultipleChoice
+  name: severeSymptomsWithDizziness
+  variant: multi-select
+  prompt: { sv: "Upplever du eller har du upplevt något av följande symptom tillsammans med yrseln?" }
+  choices:
+  - { sv: 'Bröstsmärta' }
+  - { sv: 'Oregelbunden puls' }
+  - { sv: 'Öronvärk' }
+  - { sv: 'Huvudvärk' }
+  none_option: true
+  none_prompt: { sv: "Inget av ovanstående" }
+
+- type: question
+  class_: MultipleChoice
+  name: neurologicalSymptomsWithDizziness
+  variant: multi-select
+  prompt: { sv: "Vilka av följande symptom har du besvärats av under perioden du har haft yrsel?" }
+  choices:
+  - { sv: 'Kraftlöshet' }
+  - { sv: 'Balanssvårigheter' }
+  - { sv: 'Koordinationssvårigheter' }
+  - { sv: 'Talsvårigheter' }
+  - { sv: 'Sväljsvårigheter' }
+  none_option: true
+  none_prompt: { sv: "Inget av ovanstående" }
+  
+- type: question
+  class_: QuestionBool
+  name: certainMovementsAndDizziness
+  prompt: { sv: "Kommer yrseln endast vid vissa rörelser?" }
+
+- type: question
+  class_: MultipleChoice
+  name: moderateSymptomsWithDizziness
+  variant: multi-select
+  prompt: { sv: "Stämmer något av följande in på dig?" }
+  choices:
+  - { sv: 'Yrseln har kommit och gått under flera dagar' }
+  - { sv: 'Yrseln har pågått i flera dagar' }
+  - { sv: 'Gradvis försämrad hörsel under flera dagar' }
+  none_option: true
+  none_prompt: { sv: "Inget av ovanstående" }
+
+- type: question
+  class_: MultipleChoice
+  name: mildSymptomsWithDizziness
+  variant: multi-select
+  prompt: { sv: "Stämmer något av följande in på dig?"}
+  choices:
+  - { sv: 'Yrsel uppstod efter en gungig sjöfärd' }
+  - { sv: 'Yrsel har endast kommit vid enstaka tillfällen' }
+  none_option: true
+  none_prompt: { sv: "Inget av ovanstående" }
+
+- type: exit
+  name: occasionalDizziness
+  title: { sv: "Yrsel vid enstaka tillfälle" }
+  desc: { sv: "Yrsel vid enstaka tillfällen kan bero på exempelvis oro, nackbesvär, trötthet eller vätskebrist.\n Yrsel vid hastigt uppresande beror oftast på tillfälligt blodtrycksfall då kan det svartna för ögonen. Det är särskilt vanligt hos långa personer, ungdomar och unga vuxna."}
+  urgency: wait
+  schema: rgs
+
+- type: exit
+  name: dizzinessAfterSeaTravel
+  title: { sv: "Ostadighetskänsla efter sjöfärd" }
+  desc: { sv: "Man kan känna ostadighetskänsla den närmaste tiden efter en gungig sjöfärd. Hur länge och hur kraftigt det känns varierar, men det brukar bli bättre från dag till dag och försvinna helt inom en vecka." }
+  urgency: wait
+  schema: rgs
+
+- type: exit
+  name: certainMovementsDizziness
+  title: { sv: "Lägesberoende yrsel" }
+  desc: { sv: "Yrsel som kommer endast vid vissa rörelser, till exempel när man vrider huvudet i liggande ställning, kan bero på kristallsjuka. Kan man inte stå eller röra sig kan man behöva bedömas." }
+  urgency: acute
+  schema: rgs
+
+- type: question
+  class_: QuestionBool
+  name: symptomsPassed
+  prompt: { sv: "Har alla symptom gått över?" }
+
+- type: question
+  class_: QuestionBool
+  name: dizzinessLastWeek
+  prompt: { sv: "Har du besvärats av yrsel under den senaste veckan?" }
+
+- type: exit
+  name: constitutionalSymptomsOrSevereDizziness
+  title: { sv: "Påverkat allmäntillstånd eller kraftig yrsel" }
+  desc: { sv: "Påverkat allmäntillstånd och yrsel, ofta med illamående eller kräkning, ska bedömas.\nDetsamma gäller om man har så kraftig yrsel att man har svårt att gå utan att hålla sig i väggarna, eller äta och dricka."}
+  urgency: immediate
+  schema: rgs
+
+- type: exit 
+  name: symptomFromChestWithDizziness
+  title: { sv: "Symtom från bröstet" }
+  desc: { sv: "Yrsel tillsammans med bröstsmärtor eller oregelbunden hjärtrytm ska bedömas." }
+  urgency: immediate
+  schema: rgs
+
+- type: exit
+  name: symptomFromEarWithDizziness
+  title: { sv: "Öronbesvär" }
+  desc: { sv: "Yrsel och öronvärk kan bero på öroninflammation där infektionen har spridits till hjärnhinnorna.\nYrsel och blåsor på ytterörat eller i hörselgången kan bero på en allvarlig bältrosinfektion."}
+  urgency: immediate
+  schema: rgs
+
+- type: exit
+  name: neurologicalSymptomsWithDizziness
+  title: { sv: "Bortfallssymtom, balansproblem eller förvirring"}
+  desc: { sv: "Yrsel och bortfall eller kraftlöshet som kommer plötsligt kan vara symtom på stroke eller TIA.\nAndra symtom kan vara svårighet med koordination, balans, tal eller att svälja. Syn och personlighet kan också förändras.\nSymtomen vid TIA kommer plötsligt och varar ofta femton till trettio minuter, men kan också pågå upp till ett dygn."}
+  urgency: immediate
+  schema: rgs
+
+- type: exit
+  name: suddenDizzinessWithHeadache
+  title: { sv: "Plötslig yrsel och huvudvärk" }
+  desc: { sv: "Plötslig yrsel eller balansproblem med huvudvärk kan vara symtom på till exempel hjärnhinneinflammation (meningit), TIA eller stroke." }
+  urgency: immediate
+  schema: rgs
+
+- type: exit
+  name: earSymptomsWithDizziness
+  title: { sv: "Öronbesvär" }
+  desc: { sv: "Yrsel och öronvärk kan bero på öroninflammation där infektionen har spridits till hjärnhinnorna.\nYrsel och blåsor på ytterörat eller i hörselgången kan bero på en allvarlig bältrosinfektion."}
+  urgency: immediate
+  schema: rgs
+
+- type: exit
+  name: neurologicalSymptomsWithDizzinessResolved
+  title: { sv: "Bortfallssymtom, balansproblem eller förvirring som gått över" }
+  desc: { sv: "Yrsel och bortfall eller kraftlöshet kan vara symtom på stroke eller TIA. Andra symtom kan vara svårighet med koordination, balans, tal eller att svälja. Syn och personlighet kan också förändras.\nSymtomen vid en TIA kommer plötsligt och varar ofta femton till trettio minuter, men kan också pågå urgency ett dygn. Även om symtomen har gått över av sig själv eller bara pågick under en kort stund ska man bedömas." }
+  urgency: promptly
+  schema: rgs
+
+- type: exit
+  name: recurringOrLongLastingDizziness
+  title: { sv: "Återkommande eller långvarig yrsel" }
+  desc: { sv: "Yrsel som återkommer eller som håller i sig under flera dagar bör bedömas.\nÅterkommande eller långvarig yrsel kan orsakas av exempelvis nackbesvär, lågt blodtryck eller läkemedelsbehandling.\nUtsättande av vissa läkemedel kan också ge yrsel, till exempel antidepressiva."}
+  urgency: planned
+  schema: rgs
+
+- type: exit
+  name: gradualHearingLossWithDizziness
+  title: { sv: "Gradvis försämrad hörsel" }
+  desc: { sv: "Gradvis försämrad hörsel på ett eller båda öronen i samband med yrsel eller ostadighet bör bedömas. Det kan bero på exempelvis vaxpropp." }
+  urgency: planned
+  schema: rgs
+
+- type: exit
+  name: safetyExitDizziness
+  title: { sv: "Ospecifika yrselsymptom utan uppenbara varningstecken" }
+  desc: { sv: "Ospecifika yrselsymptom utan uppenbara varningstecken kan bero på exempelvis oro, trötthet, vätskebrist eller nackbesvär. Med tanke på den ospecifika symptombilden bör symptomen bedömas av en läkare." }
+  urgency: planned
+  schema: rgs

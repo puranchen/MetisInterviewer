@@ -1,6 +1,6 @@
 # MetisInterviewer (MI)
 
-MetisInterviewer (MI) is a chatbot specialized in medical consultations. MI conducts a structured interview with a simple text interface and is powered by clinical decision trees.
+MetisInterviewer is a chatbot specialized in medical consultations. It conducts a structured interview with a simple text interface and is powered by clinical decision trees.
 
 ## Table of Contents
 
@@ -36,6 +36,13 @@ MetisInterviewer (MI) is a chatbot specialized in medical consultations. MI cond
 
 ## Usage
 
-To start the chatbot, run:
+To start the chatbot:
+
+Navigate to the project directory:
 ```sh
-python metis_interviewer.py
+cd agent
+```
+
+Run
+```sh
+python metis.py
