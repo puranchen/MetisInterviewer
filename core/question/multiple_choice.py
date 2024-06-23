@@ -27,6 +27,10 @@ class MultipleChoice(QuestionABC):
             self._choices = [MCOption(idx+1, prompt=prompt, answer=None, lang=lang) for idx, prompt in enumerate(choices)]
             if self.none_option:
                 self._choices.append(MCOption(0, prompt=none_prompt, lang=lang))
+        elif all(isinstance(choice, dict) for choice in choices):
+            self._choices = [MCOption(idx+1, prompt=prompt, answer=None) for idx, prompt in enumerate(choices)]
+            if self.none_option:
+                self._choices.append(MCOption(0, prompt=none_prompt))
         # If the list of choices are MCOption objects, use them directly
         elif all(isinstance(choice, MCOption) for choice in choices):
             self._choices = choices
