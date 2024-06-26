@@ -4,22 +4,19 @@ from question.question_float import QuestionFloat
 from question.question_bool import QuestionBool
 from core.enums.evals import Fever
 import yaml
-from assessment.constitutionalSymptomsLogic import evalConstitutionalSymptoms
+from assessment.constitutionalSymptoms.logic import evalConstitutionalSymptoms
 from exits.exit_abc import ExitABC
 
-with open('core/flowchart/dizzinessConfig.yaml', 'r') as file:
-    data = yaml.load(file, Loader=yaml.FullLoader)
-
-    qs = [d for d in data if d["type"] == 'question']
-    es = [d for d in data if d["type"] == 'exit']
+with open('core/flowchart/dizziness/config.yaml', 'r') as file:
+    config = yaml.load(file, Loader=yaml.FullLoader)
 
 # initialize all questions and exits
 Q = {}
-for q in qs:
-    Q[q.get('name')] = globals()[q.get('class_')](**q)
+for q in config['nodes']:
+    Q[q.get('id')] = globals()[q.get('class')](**q)
 
 EXIT = {}
-for e in es:
+for e in config['exits']:
     EXIT[e.get('name')] = ExitABC(**e)
 
 def evalDizziness(lang):

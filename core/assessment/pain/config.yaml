@@ -1,6 +1,7 @@
-- type: question
-  class_: QuestionInt
-  name: painLevel
+nodes:
+- id: painLevel
+  type: question
+  class: QuestionInt
   prompt: { sv: "Hur skulle du beskriva din smärta på en skala från 0 till 10 där 0 är ingen smärta och 10 är värsta tänkbara smärta?" }
   min_value: 0
   max_value: 10

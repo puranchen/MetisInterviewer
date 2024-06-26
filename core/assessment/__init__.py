@@ -1,3 +1,3 @@
-from .feverLogic import evalFever
-from .constitutionalSymptomsLogic import evalConstitutionalSymptoms
-from .painLogic import evalPain
+from .constitutionalSymptoms.logic import evalConstitutionalSymptoms
+from .fever.logic import evalFever
+from .pain.logic import evalPain

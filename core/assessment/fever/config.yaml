@@ -1,6 +1,7 @@
-- type: question
-  class_: MultipleChoice
-  name: haveFever
+nodes: 
+- id: haveFever
+  type: question
+  class: MultipleChoice
   prompt: { 'sv': 'Har du feber?' }
   choices:
   - { 'sv': 'Ja' }
@@ -8,25 +9,25 @@
   - { 'sv': 'Vet ej/kanske' }
   none_option: false
 
-- type: question
-  class_: QuestionFloat
-  name: bodyTemperature
+- id: bodyTemperature
+  type: question
+  class: QuestionFloat
   prompt: { 'sv': 'Vad är din kroppstemperatur?' }
   min_value: 20
   max_value: 55
   unit: 'ºC'
 
-- type: question
-  class_: QuestionBool
-  name: canMeasureTemp
+- id: canMeasureTemp
+  type: question
+  class: QuestionBool
   prompt: { 'sv': 'Har du möjlighet att mäta temperaturen?' }
 
-- type: question
-  class_: QuestionBool
-  name: feelingWarm
+- id: feelingWarm
+  type: question
+  class: QuestionBool
   prompt: { 'sv': 'Känner du dig varm?' }
 
-- type: question
-  class_: QuestionBool
-  name: knownImmunoDeficiency
+- id: knownImmunoDeficiency
+  type: question
+  class: QuestionBool
   prompt: { 'sv': 'Har du någon känd immunbristsjukdom?' }

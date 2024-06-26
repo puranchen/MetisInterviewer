@@ -1,7 +1,8 @@
-- type: question
-  class_: MultipleChoice
+nodes: 
+- id: constitutionalSymptoms
+  type: question
+  class: MultipleChoice
   variant: multi-select
-  name: constitutionalSymptoms
   prompt: { sv: "Vilka av följande symptom stämmer in på dig?" }
   choices:
   - { sv: 'Blek, kråaktig eller blåvit hud' }
@@ -13,9 +14,9 @@
   none_option: true
   none_prompt: { sv: "Inget av ovanstående" }
 
-- type: question
-  class_: QuestionBool
-  name: notSelfSustaining
+- id: notSelfSustaining
+  type: question
+  class: QuestionBool
   prompt: { sv: 'Upplever du svårigheter att ta hand om dig själv?' }
 
   
