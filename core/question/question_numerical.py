@@ -95,3 +95,5 @@ class QuestionNumerical(QuestionABC):
             print(f"Invalid answer: {answer!r}. Must be a number smaller than {self.max_value!r}. Please try again.")
         else:
             print(f"Invalid answer: {answer!r}. Must be a number, please try again.")
+
+__all__ = ["QuestionNumerical"]
