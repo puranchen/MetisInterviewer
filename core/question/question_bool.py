@@ -13,6 +13,7 @@ class QuestionBool(QuestionABC):
         if not isinstance(value, (bool, type(None))) and value not in [0, 1]:
             raise ValueError(f"Answer must be a boolean or 0/1, got {type(value)}: {value}")
         self._answer = bool(value)
+        self.answered = True
 
     def ask(self, lang: str = 'en') -> None:
         """ Ask the question to the user, default language is Swedish. Used for debugging and testing. """
@@ -27,11 +28,11 @@ class QuestionBool(QuestionABC):
                 print({'en': '0 - Skip question', 'sv': '0 - Hoppa över frågan'}[lang])
             answer = input(self.INPUT_PROMPT[lang]).strip()
             if self._is_valid_user_input(answer):
-                if self.skippable and answer == "0":
-                    self.asked = True
+                if answer == "0":
                     self._answer = None
-                    break
-                self.set_answer(answer == "1")
+                else:
+                    self.set_answer(answer == "1")
+                    self.answered = True
                 self.asked = True
                 break
             else:

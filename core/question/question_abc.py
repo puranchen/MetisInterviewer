@@ -13,16 +13,18 @@ class QuestionABC(ABC):
 
     def __init__(self, prompt, **kwargs):
         self._prompt = {}
+        self._skippable:bool = False
+        self._asked:bool = False
+        self._answered:bool = False
         self._answer = None
+
         self.prompt = (prompt, kwargs.get("lang", "en"))
         self.skippable = kwargs.get("skippable", False)
-        self.asked = False
-        if kwargs.get("answer", None) is not None:
-            self.set_answer(kwargs.get("answer"))
-        if isinstance(prompt, str):
-            self.lang = kwargs.get("lang", "en")
-        elif isinstance(prompt, dict):
-            self.lang = list(prompt.keys())[0]
+        self.asked = kwargs.get("asked", False)
+
+        answer_input = kwargs.get("answer", None)
+        if answer_input is not None:
+            self.set_answer(answer_input)
     
     @property
     def prompt(self):
@@ -40,6 +42,33 @@ class QuestionABC(ABC):
             raise ValueError("Prompt must be a string or a dictionary with a language key.")
 
     @property
+    def skippable(self):
+        return self._skippable
+    
+    @skippable.setter
+    def skippable(self, value):
+        assert isinstance(value, bool)
+        self._skippable = value
+
+    @property
+    def asked(self):
+        return self._asked
+    
+    @asked.setter
+    def asked(self, value):
+        assert isinstance(value, bool)
+        self._asked = value
+
+    @property
+    def answered(self):
+        return self._answered
+
+    @answered.setter
+    def answered(self, value):
+        assert isinstance(value, bool)
+        self._answered = value
+
+    @property
     def answer(self):
         """ Get the answer to the question. """
         return self._answer
@@ -54,5 +83,7 @@ class QuestionABC(ABC):
     def set_answer(self, value):
         """ Set the answer to the question. """
         pass
+    
+    
 
 __all__ = ['QuestionABC']

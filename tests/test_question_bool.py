@@ -6,6 +6,8 @@ class TestQuestionBool(unittest.TestCase):
 
     def setUp(self):
         self.q = QuestionBool("Is the sky blue?")
+        self.assertFalse(self.q.asked)
+        self.assertFalse(self.q.answered)
 
     def test_question_bool_init(self):
         self.assertFalse(self.q.asked)
@@ -24,12 +26,15 @@ class TestQuestionBool(unittest.TestCase):
         self.assertTrue(self.q.answer)
         self.q.set_answer(False)
         self.assertFalse(self.q.answer)
+        self.assertTrue(self.q.answered)
 
     def test_question_bool_set_answer_2(self):
         self.q.set_answer(1)
         self.assertTrue(self.q.answer)
         self.q.set_answer(0)
         self.assertFalse(self.q.answer)
+        self.assertFalse(self.q.answer)
+        self.assertTrue(self.q.answered)
 
     def test_question_bool_is_invalid_answer(self):
         self.assertFalse(self.q._is_valid_user_input("3"))
@@ -41,14 +46,13 @@ class TestQuestionBool(unittest.TestCase):
     def test_question_bool_ask_valid_input(self, mock_input):
         self.q.ask()
         self.assertTrue(self.q.asked)
-        self.assertTrue(self.q.answer)
+        self.assertTrue(self.q.answered)
 
     @patch('builtins.input', side_effect=['3', '1'])
     @patch('builtins.print')
     def test_question_bool_ask_invalid_input_then_valid(self, mock_print, mock_input):
         self.q.ask()
         self.assertTrue(self.q.asked)
-        self.assertTrue(self.q.answer)
         mock_print.assert_any_call("Invalid answer. Please try again.\n")
 
 

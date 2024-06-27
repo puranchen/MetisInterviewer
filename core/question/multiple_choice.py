@@ -10,8 +10,6 @@ class MultipleChoice(QuestionABC):
         self.none_prompt = kwargs.get("none_prompt", "None of the above")
         self.variant = kwargs.get("variant", 'single-select')
         self.answered = kwargs.get("answered", False)
-        if self.answered:
-            self.complete()
         self.set_choices(choices, kwargs.get('lang', 'en'), self.none_prompt)
         self._answer: List[int] = []
         
@@ -73,6 +71,7 @@ class MultipleChoice(QuestionABC):
 
     def ask(self, lang='sv'):
         """ Used for debugging and testing """
+        self.asked = True
         while True:
             self.reset_answers() # Reset answers when asking question
             self.print_question(lang)
@@ -102,7 +101,7 @@ class MultipleChoice(QuestionABC):
                         break
                 print(f"Invalid answer: {answer!r}, please try again.\n")
                 continue
-
+    
     def complete(self):
         """ Assign unassigned questions among multiple choices """
         if all(choice.answer == None for choice in self.choices):

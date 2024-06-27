@@ -5,6 +5,7 @@ class QuestionStr(QuestionABC):
     def set_answer(self, value=None):
         if value is not None:
             self._answer = str(value)
+            self._answered = True
     
     def ask(self, lang='en'):
         """ Ask the question to the user, default language is Swedish. Used for debugging and testing. """

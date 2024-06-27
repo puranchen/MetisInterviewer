@@ -24,6 +24,7 @@ class TestQuestionInt(unittest.TestCase):
     def test_question_int_set_answer_valid(self):
         self.q.set_answer(5)
         self.assertEqual(self.q._answer, 5)
+        self.assertTrue(self.q.answered)
 
     def test_question_int_set_answer_invalid_type(self):
         with self.assertRaises(ValueError):
@@ -53,6 +54,7 @@ class TestQuestionInt(unittest.TestCase):
             self.assertTrue(self.q.asked)
             self.assertEqual(self.q._answer, 7)
             mock_print_invalid.assert_not_called()
+        self.assertTrue(self.q.answered)
 
     @patch('builtins.input', side_effect=['invalid', '7'])
     def test_question_int_ask_invalid_then_valid(self, mock_input):
@@ -62,6 +64,7 @@ class TestQuestionInt(unittest.TestCase):
             self.assertTrue(self.q.asked)
             self.assertEqual(self.q._answer, 7)
             mock_print_invalid.assert_called_once()
+        self.assertTrue(self.q.answered)
 
     def test_question_int_repr(self):
         self.q.set_answer(5)
