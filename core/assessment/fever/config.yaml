@@ -31,3 +31,51 @@ nodes:
   type: question
   class: QuestionBool
   prompt: { 'sv': 'Har du någon känd immunbristsjukdom?' }
+
+- id: haveFever
+  type: evaluation
+  func: |
+    def evaluate(node):
+      if any(n.idx == 1 for n in node.answer):
+          return 'bodyTemperature'
+      elif any(n.idx == 2 for n in node.answer):
+          return 'knownImmunoDeficiency'
+      elif any(n.idx == 3 for n in node.answer):
+          return 'canMeasureTemp'
+      else:
+          raise ValueError('Unknown Error')
+
+- id: bodyTemperature
+  type: evaluation
+  func: |
+    def evaluate(node):
+      if node.answer == None:
+        return 'canMeasureTemp'
+      if node.answer >= 38:
+        return Fever.CONFIRMED
+      else:
+        return 'knownImmunoDeficiency'
+
+- id: canMeasureTemp
+  type: evaluation
+  func: |
+    def evaluate(node):
+      if node.answer:
+        return 'bodyTemperature'
+      else:
+        return 'feelingWarm'
+
+- id: feelingWarm
+  type: evaluation
+  func: |
+    def evaluate(node):
+      return 'knownImmunoDeficiency'
+
+- id: knownImmunoDeficiency
+  type: evaluation
+  func: |
+    def evaluate(node):
+      if node.answer:
+        return Fever.N_A
+      else:
+        return Fever.INCONCLUSIVE

@@ -19,5 +19,23 @@ nodes:
   class: QuestionBool
   prompt: { sv: 'Upplever du svårigheter att ta hand om dig själv?' }
 
-  
-  
+- id: constitutionalSymptoms
+  type: evaluation
+  func: |
+    def evaluate(node):
+      n_symptoms = sum(n.idx != 0 for n in node.answer)
+
+      if any(n.idx == 0 for n in node.answer):
+          return ConstitutionalSymptoms.NONE
+      elif n_symptoms >= 3:
+          return ConstitutionalSymptoms.SEVERE
+      elif n_symptoms >= 1:
+          return 'notSelfSustaining'
+      else:
+          return ConstitutionalSymptoms.UNKNOWN
+
+- id: notSelfSustaining
+  type: evaluation
+  func: |
+    def evaluate(node):
+      return ConstitutionalSymptoms.MODERATE if node.answer else ConstitutionalSymptoms.MILD

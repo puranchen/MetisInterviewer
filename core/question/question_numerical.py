@@ -10,7 +10,7 @@ class QuestionNumerical(QuestionABC):
         self.value_type = kwargs.get("value_type")
         self.max_value = kwargs.get("max_value", None)
         self.min_value = kwargs.get("min_value", None)
-
+        
     @property
     def max_value(self):
         return self._max_value

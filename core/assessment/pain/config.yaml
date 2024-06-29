@@ -5,3 +5,24 @@ nodes:
   prompt: { sv: "Hur skulle du beskriva din smärta på en skala från 0 till 10 där 0 är ingen smärta och 10 är värsta tänkbara smärta?" }
   min_value: 0
   max_value: 10
+
+- id: painLevel
+  type: evaluation
+  func: |
+    def evaluate(node):
+      if node.answer == 0:
+        return Pain.NO_PAIN
+      elif node.answer <= 1:
+        return Pain.VERY_MILD
+      elif node.answer <= 3:
+        return Pain.MILD
+      elif node.answer <= 6:
+        return Pain.MODERATE
+      elif node.answer <=8:
+        return Pain.SEVERE
+      elif node.answer <= 9:
+        return Pain.VERY_SEVERE
+      elif node.answer == 10:
+        return Pain.WORST_PAIN
+      else:
+        return Pain.UNKNOWN

@@ -11,7 +11,7 @@ class QuestionABC(ABC):
         "en": "Answer: "
     }
 
-    def __init__(self, prompt, **kwargs):
+    def __init__(self, prompt, evaluate=None, **kwargs):
         self._prompt = {}
         self._skippable:bool = False
         self._asked:bool = False
@@ -25,7 +25,20 @@ class QuestionABC(ABC):
         answer_input = kwargs.get("answer", None)
         if answer_input is not None:
             self.set_answer(answer_input)
+
+        self.evaluate = evaluate
+
+    @property
+    def evaluate(self):
+        return self._evaluate
     
+    @evaluate.setter
+    def evaluate(self, value):
+        if value is None:
+            self._evaluate = None
+        else:
+            self._evaluate = value.__get__(self, QuestionABC)
+
     @property
     def prompt(self):
         """ Get the prompt for the question. """
